@@ -21,13 +21,22 @@ class MyApp extends StatelessWidget {
         Provider<PokemonApi>(
           create: (context) => PokemonRestService(
             context.read<PokemonAnalytics>()
+            // context.read<PokemonAnalytics>()
+            // context.read<PokemonAnalytics>()
+            // context.read<PokemonAnalytics>()
+            // context.read<PokemonAnalytics>()
           ),
         ),
+        // ProxyProvider2<PokemonAnalytics, PokemonAnalytics2,PokemonApi>(
+        //   update: (_, analytics,analytics, __) => 
+        //   PokemonRestService(analytics,analytics2),
+        // ),
         ChangeNotifierProvider(create: (_) => ThemeProvider())
       ],
       child: Consumer<ThemeProvider>(builder: (context, provider, _) {
         final isLight = provider.isLight;
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'Flutter pokemon',
           theme: isLight ? ThemeData.light() : ThemeData.dark(),
           home: const SplashScreen(),

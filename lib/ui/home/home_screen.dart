@@ -34,52 +34,57 @@ class _HomeScreenState extends State<HomeScreen> {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-     
         body: SafeArea(
-          child: result == null
-              ? const Center(child: CircularProgressIndicator())
-              : Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      child: result == null
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Text('Pokedex',
-                              style: textTheme.headlineLarge?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              )),
-                          IconButton(
-                            onPressed: () {
-                              context.read<ThemeProvider>().changeTheme();
-                            },
-                            icon: const Icon(Icons.light_mode),
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Text('Search your pokemon'),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      const TextField(
-                          decoration: InputDecoration(
-                              hintText: 'Name or Number',
-                              fillColor: Color.fromARGB(255, 246, 245, 245),
-                              filled: true,
-                              prefixIcon: Icon(Icons.search),
-                              enabledBorder: InputBorder.none)),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      const Expanded(child: PokemonGrid()),
+                      Text('Pokedex',
+                          style: textTheme.headlineLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          )),
+                      IconButton(
+                        iconSize: 30,
+                        onPressed: () {
+                          context.read<ThemeProvider>().changeTheme();
+                        },
+                        icon: const Icon(Icons.light_mode),
+                      )
                     ],
                   ),
-                ),
-        ));
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text('Busca tu Pokémon'),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  TextField(
+                      onChanged: (val) {
+                        context.read<HomeProvider>().searchPokemon(val);
+                        //Provider.of<HomeProvider>(context, listen:false).searchPokemon(val);
+                      },
+                      decoration: const InputDecoration(
+                          hintText: 'Nombre del Pokémon',
+                          fillColor: Color.fromARGB(255, 246, 245, 245),
+                          filled: true,
+                          prefixIcon: Icon(Icons.search),
+                          enabledBorder: InputBorder.none)),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Expanded(child: PokemonGrid()),
+                ],
+              ),
+            ),
+    ));
   }
 }
 
@@ -88,7 +93,8 @@ class PokemonGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final result = context.read<HomeProvider>().pokemonList;
+    final result = context.watch<HomeProvider>().searchList;
+    //final pokemons = Provider.of<HomeProvider>(context).searchList;
 
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
